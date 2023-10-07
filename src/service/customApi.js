@@ -1,8 +1,9 @@
 import axios from "axios";
+import { SITE } from "../App";
 
 const customAPI = () => {
     return axios.create({
-    baseURL: 'http://localhost:3001/',
+    baseURL: SITE,
     headers: {
         Authorization : `Bearer ${localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')).token:""}`
     }

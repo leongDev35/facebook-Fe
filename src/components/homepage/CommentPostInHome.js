@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useSelector } from "react-redux";
-import { socket } from '../../App';
+import { SITE, socket } from '../../App';
 
 export default function CommentPostInHome({ postId }) {
     const [comments, setComments] = useState([]);
@@ -41,7 +41,7 @@ export default function CommentPostInHome({ postId }) {
     const loadComments = async () => {
         console.log(1);
         try {
-            const response = await axios.get(`http://localhost:3001/posts/comment`, {
+            const response = await axios.get(`${SITE}/posts/comment`, {
                 params: {
                     postId: postId,
                 },

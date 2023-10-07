@@ -11,7 +11,9 @@ import CreateGroup from "./pages/CreateGroup";
 import { useSelector } from "react-redux";
 
 import io from 'socket.io-client';
-export const socket = io('http://localhost:3001');
+
+export const SITE = "https://leong-facebook-clone.onrender.com"
+export const socket = io(SITE);
 socket.onAny((event, ...args) => {  //! 1 trình nghe tổng hợp, mọi listener mà client nhận được sẽ hiện
   console.log(event, args);
 });

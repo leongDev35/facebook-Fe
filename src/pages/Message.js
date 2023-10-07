@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import axios from 'axios'
-import { socket } from '../App';
+import { SITE, socket } from '../App';
 
 export default function Message() {
   const [type, setType] = useState('');
@@ -29,7 +29,7 @@ export default function Message() {
 
   const loadPartners = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/users/chat/listFriend`, {
+      const response = await axios.get(`${SITE}/users/chat/listFriend`, {
         params: {
           userId: user._id, //! thay bằng id của user hiện tại
           // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL

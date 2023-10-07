@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { useSelector } from "react-redux";
-import { socket } from '../../App';
+import { SITE, socket } from '../../App';
 import CommentPostInHome from './CommentPostInHome';
 
 
@@ -47,7 +47,7 @@ export default function Post() {
   console.log(posts);
   const loadMorePosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/posts`, {
+      const response = await axios.get(`${SITE}/posts`, {
         params: {
           // userId: '64e2edcbccb40a13972580bf', //! thay bằng id của user hiện tại
           after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL

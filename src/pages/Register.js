@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { notification } from "antd";
+import { SITE } from "../App";
 
 function SignUpSuccess() {
     return (
@@ -52,7 +53,7 @@ export default function Register() {
             if (password1 === password2) {
                 const user = { userName: username, password: password1, email : email, fullName: fullName }
                 try {
-                    const res = await axios.post('http://localhost:3001/users', user);
+                    const res = await axios.post(`${SITE}/users`, user);
                      console.log(res)
                      if (res.data.message == `User ${username} exists already`) {
                         api.info({
