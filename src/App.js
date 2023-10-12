@@ -18,8 +18,7 @@ import ProfileUser from "./pages/ProfileUser";
 import PostById from "./pages/PostById";
 import { useEffect, useState } from "react";
 
-export const SITE = "http://localhost:3001"
-export const SITEFE = "http://localhost:3000"
+export const SITE = "https://leong-facebook-clone.onrender.com"
 
 export const socket = io(SITE);
 socket.onAny((event, ...args) => {  //! 1 trình nghe tổng hợp, mọi listener mà client nhận được sẽ hiện
