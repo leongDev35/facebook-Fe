@@ -1,74 +1,66 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
-import NavBar from '../components/homepage/NavBar';
 import axios from 'axios'
-import { Link } from 'react-router-dom';
 import { SITE, socket } from '../App';
 
+import { useSelector } from 'react-redux';
+import NavBar from '../components/homepage/NavBar';
+import { Link } from 'react-router-dom';
 
-export default function MyNetwork() {
-  const [listFriends, setListFriends] = useState([]);
+export default function MyListStranger() {
 
-  console.log(listFriends);
+  const [listStranger, setListStranger] = useState([]);
+
   const user = useSelector(({ users }) => {
     return users.currentUser.userData
   })
-  async function handleRemoveFriend(friendId) {
-    const updateListFriend = [...listFriends]
-        const newArray = updateListFriend.filter((item) => item.userId._id !== friendId);
-        console.log(newArray);
-        setListFriends(newArray);
-    console.log(friendId);
-    const response = await axios.delete(`${SITE}/users/friend/delete`, {
-      params: {
-        userId: user._id, //! thay bằng id của user hiện tại
-        friendId: friendId
-        // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
-      },
-    });
-    console.log(response.data);
-  }
-  const loadListFriends = async () => {
+
+  async function handleSentFriendRequest( idReceiver) {
     try {
-      const response = await axios.get(`${SITE}/users/friend`, {
+        socket.emit('sendFriendRequest', user._id , idReceiver)
+
+        const updateListStranger = [...listStranger]
+        const newArray = updateListStranger.filter((item) => item._id !== idReceiver);
+        console.log(newArray);
+        setListStranger(newArray);
+        await axios.post(`${SITE}/users/friend/request`, {
+            
+              idSender: user._id,
+              idReceiver: idReceiver
+              // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
+            
+          });
+
+         
+
+    } catch (error) {
+     console.log(error);   
+    }
+
+
+  }
+
+  const loadListStranger = async () => {
+    try {
+      const response = await axios.get(`${SITE}/users/stranger`, {
         params: {
-          userId: user._id, //! thay bằng id của user hiện tại
-          request: "listFriend"
+            userIdToCheck: user._id, 
           // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
         },
       });
       console.log(response.data);
-      const newListFriend = response.data.listFriend;
-      setListFriends([...listFriends, ...newListFriend])
+      const newListStranger = response.data.stranger;
+      setListStranger([...listStranger, ...newListStranger])
 
     } catch (error) {
       console.log(error);
     }
 
   }
+  console.log(listStranger);
   useEffect(() => {
-    loadListFriends();
+    loadListStranger();
   }, []);
-
-  //! mockup
-//   const listFriends =  [
-//     {
-//         userId: {
-//             _id: "64e2edcbccb40a13972580bf",
-//             fullName: "Duy Nguyễn",
-//             avatarUrl: "https://dragonball.guru/wp-content/uploads/2021/03/pngarea.com_kid-buu-png-1410072-e1619048346991-400x400.png"
-//         }
-       
-//     },
-//     {
-//       userId: {
-//           _id: "64e2edcbccb40a13972580bf",
-//           fullName: "Duy Nguyễn",
-//           avatarUrl: "https://dragonball.guru/wp-content/uploads/2021/03/pngarea.com_kid-buu-png-1410072-e1619048346991-400x400.png"
-//       }
-     
-//   }
-// ]
+  
   return (
     <div>
   {/* =======================
@@ -130,10 +122,10 @@ export default function MyNetwork() {
             <div className="card-footer mt-3 pt-2 pb-0">
               {/* Nav profile pages */}
               <ul className="nav nav-bottom-line align-items-center justify-content-center justify-content-md-start mb-0 border-0">
-                <li className="nav-item"> <Link className="nav-link" to={`/mypost`}>My Post</Link> </li>
-                <li className="nav-item"> <Link className="nav-link active" to="/network">My Friend <span className="badge bg-success bg-opacity-10 text-success small"> {listFriends.length}</span> </Link> </li>
+                <li className="nav-item"> <Link className="nav-link" to="/mypost">My Post</Link> </li>
+                <li className="nav-item"> <Link className="nav-link" to="/network">My Friend  </Link> </li>
                 <li className="nav-item"> <Link className="nav-link" to="/listRequest">My List Request</Link> </li>
-                <li className="nav-item"> <Link className="nav-link" to="/listStranger">My List Stranger</Link> </li>
+                <li className="nav-item"> <Link className="nav-link active" to="/listStranger">My List Stranger <span className="badge bg-success bg-opacity-10 text-success small"> {listStranger.length}</span></Link> </li>
               </ul>
             </div>
           </div>
@@ -142,22 +134,22 @@ export default function MyNetwork() {
           <div className="card">
             {/* Card header START */}
             <div className="card-header border-0 pb-0">
-              <h5 className="card-title"> Friends</h5> 
+              <h5 className="card-title"> List Request</h5> 
             </div>
             {/* Card header END */}
             {/* Card body START */}
             <div className="card-body">
               {/* Connections Item */}
-              {listFriends.map(friend => 
-                <div key={friend.userId._id} className="d-md-flex align-items-center mb-4">
+              {listStranger.map(friend => 
+                <div key={friend._id} className="d-md-flex align-items-center mb-4">
                 {/* Avatar */}
                 <div className="avatar me-3 mb-3 mb-md-0">
-                  <a href="#!"> <img className="avatar-img rounded-circle" src={friend.userId.avatarUrl} alt /> </a>
+                  <a href="#!"> <img className="avatar-img rounded-circle" src={friend.avatarUrl} alt /> </a>
                 </div>
                 {/* Info */}
                 <div className="w-100">
                   <div className="d-sm-flex align-items-start">
-                    <h6 className="mb-0"><a href="#!">{friend.userId.fullName} </a></h6>
+                    <h6 className="mb-0"><a href="#!">{friend.fullName} </a></h6>
                     <p className="small ms-sm-2 mb-0">Full Stack Web Developer</p>
                   </div>
                   {/* Connections START */}
@@ -186,9 +178,9 @@ export default function MyNetwork() {
                 {/* Button */}
                 <div className="ms-md-auto d-flex">
                   <button onClick={()=>{
-                    handleRemoveFriend(friend.userId._id);
-                  }}  className="btn btn-danger-soft btn-sm mb-0 me-2"> Remove </button>
-                  <button className="btn btn-primary-soft btn-sm mb-0"> Message </button>
+                    handleSentFriendRequest(friend._id);
+                  }} className="btn btn-danger-soft btn-sm mb-0 me-2"> Sent Friend Request </button>
+                  
                 </div>
               </div>
               )}
@@ -286,7 +278,7 @@ export default function MyNetwork() {
               </div>
             </div>
             {/* Card END */}
-            
+           
           </div>
         </div>
         {/* Right sidebar END */}

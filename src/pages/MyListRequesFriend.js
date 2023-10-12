@@ -1,45 +1,52 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
-import NavBar from '../components/homepage/NavBar';
 import axios from 'axios'
-import { Link } from 'react-router-dom';
 import { SITE, socket } from '../App';
 
+import { useSelector } from 'react-redux';
+import NavBar from '../components/homepage/NavBar';
+import { Link } from 'react-router-dom';
 
-export default function MyNetwork() {
-  const [listFriends, setListFriends] = useState([]);
+export default function MyListRequest() {
 
-  console.log(listFriends);
+  const [listFriendsSentRequest, setListFriendsSentRequest] = useState([]);
+
   const user = useSelector(({ users }) => {
     return users.currentUser.userData
   })
-  async function handleRemoveFriend(friendId) {
-    const updateListFriend = [...listFriends]
-        const newArray = updateListFriend.filter((item) => item.userId._id !== friendId);
-        console.log(newArray);
-        setListFriends(newArray);
+
+  async function handleResponseFriendRequest(friendId, response) {
     console.log(friendId);
-    const response = await axios.delete(`${SITE}/users/friend/delete`, {
-      params: {
-        userId: user._id, //! thay bằng id của user hiện tại
-        friendId: friendId
+    console.log(response);
+    
+
+    const updateListFriendsSentRequest = [...listFriendsSentRequest]
+        const newArray = updateListFriendsSentRequest.filter((item) => item.userId._id !== friendId);
+        console.log(newArray);
+        setListFriendsSentRequest(newArray);
+    console.log(friendId);
+    const serverData = await axios.post(`${SITE}/users/friend/accept`, {
+      
+        userId: user._id, 
+        senderId: friendId,
+        response: response
         // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
-      },
+      
     });
-    console.log(response.data);
+    console.log(serverData.data);
   }
-  const loadListFriends = async () => {
+
+  const loadListFriendsSentRequest = async () => {
     try {
       const response = await axios.get(`${SITE}/users/friend`, {
         params: {
           userId: user._id, //! thay bằng id của user hiện tại
-          request: "listFriend"
+          request: "listFriendsSentRequest"
           // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
         },
       });
       console.log(response.data);
-      const newListFriend = response.data.listFriend;
-      setListFriends([...listFriends, ...newListFriend])
+      const newListFriendsSentRequest = response.data.listFriendsSentRequest;
+      setListFriendsSentRequest([...listFriendsSentRequest, ...newListFriendsSentRequest])
 
     } catch (error) {
       console.log(error);
@@ -47,28 +54,9 @@ export default function MyNetwork() {
 
   }
   useEffect(() => {
-    loadListFriends();
+    loadListFriendsSentRequest();
   }, []);
 
-  //! mockup
-//   const listFriends =  [
-//     {
-//         userId: {
-//             _id: "64e2edcbccb40a13972580bf",
-//             fullName: "Duy Nguyễn",
-//             avatarUrl: "https://dragonball.guru/wp-content/uploads/2021/03/pngarea.com_kid-buu-png-1410072-e1619048346991-400x400.png"
-//         }
-       
-//     },
-//     {
-//       userId: {
-//           _id: "64e2edcbccb40a13972580bf",
-//           fullName: "Duy Nguyễn",
-//           avatarUrl: "https://dragonball.guru/wp-content/uploads/2021/03/pngarea.com_kid-buu-png-1410072-e1619048346991-400x400.png"
-//       }
-     
-//   }
-// ]
   return (
     <div>
   {/* =======================
@@ -130,9 +118,9 @@ export default function MyNetwork() {
             <div className="card-footer mt-3 pt-2 pb-0">
               {/* Nav profile pages */}
               <ul className="nav nav-bottom-line align-items-center justify-content-center justify-content-md-start mb-0 border-0">
-                <li className="nav-item"> <Link className="nav-link" to={`/mypost`}>My Post</Link> </li>
-                <li className="nav-item"> <Link className="nav-link active" to="/network">My Friend <span className="badge bg-success bg-opacity-10 text-success small"> {listFriends.length}</span> </Link> </li>
-                <li className="nav-item"> <Link className="nav-link" to="/listRequest">My List Request</Link> </li>
+                <li className="nav-item"> <Link className="nav-link" to="/mypost">My Post</Link> </li>
+                <li className="nav-item"> <Link className="nav-link" to="/network">My Friend  </Link> </li>
+                <li className="nav-item"> <Link className="nav-link active" to="/listRequest">My List Request <span className="badge bg-success bg-opacity-10 text-success small"> {listFriendsSentRequest.length}</span></Link> </li>
                 <li className="nav-item"> <Link className="nav-link" to="/listStranger">My List Stranger</Link> </li>
               </ul>
             </div>
@@ -142,13 +130,13 @@ export default function MyNetwork() {
           <div className="card">
             {/* Card header START */}
             <div className="card-header border-0 pb-0">
-              <h5 className="card-title"> Friends</h5> 
+              <h5 className="card-title"> List Request</h5> 
             </div>
             {/* Card header END */}
             {/* Card body START */}
             <div className="card-body">
               {/* Connections Item */}
-              {listFriends.map(friend => 
+              {listFriendsSentRequest.map(friend => 
                 <div key={friend.userId._id} className="d-md-flex align-items-center mb-4">
                 {/* Avatar */}
                 <div className="avatar me-3 mb-3 mb-md-0">
@@ -186,9 +174,11 @@ export default function MyNetwork() {
                 {/* Button */}
                 <div className="ms-md-auto d-flex">
                   <button onClick={()=>{
-                    handleRemoveFriend(friend.userId._id);
-                  }}  className="btn btn-danger-soft btn-sm mb-0 me-2"> Remove </button>
-                  <button className="btn btn-primary-soft btn-sm mb-0"> Message </button>
+                    handleResponseFriendRequest(friend.userId._id, "reject");
+                  }} className="btn btn-danger-soft btn-sm mb-0 me-2"> Reject </button>
+                  <button onClick={()=>{
+                    handleResponseFriendRequest(friend.userId._id, "accept");
+                  }} className="btn btn-primary-soft btn-sm mb-0"> Accept </button>
                 </div>
               </div>
               )}

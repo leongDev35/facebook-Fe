@@ -1,4 +1,5 @@
 
+import { Link, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useSelector } from "react-redux";
@@ -6,7 +7,6 @@ import { SITE, socket } from '../../App';
 
 export default function CommentPostInHome({ postId }) {
     const [comments, setComments] = useState([]);
-    console.log(comments);
 
     const user = useSelector(({ users }) => {
         return users.currentUser.userData
@@ -39,7 +39,7 @@ export default function CommentPostInHome({ postId }) {
         return `${monthName} ${day} ${year} at ${hours}:${minutes}`
     }
     const loadComments = async () => {
-        console.log(1);
+        
         try {
             const response = await axios.get(`${SITE}/posts/comment`, {
                 params: {
@@ -110,7 +110,10 @@ export default function CommentPostInHome({ postId }) {
                             {/* Comment by */}
                             <div className="bg-light rounded-start-top-0 p-3 rounded">
                                 <div className="d-flex justify-content-between">
-                                    <h6 className="mb-1"> <a href="#!"> {comment.idUserComment.fullName}</a></h6>
+                                    <h6 className="mb-1"> 
+                                    <Link to={`/user/${comment.idUserComment._id}`}>{comment.idUserComment.fullName}</Link>
+
+                                    </h6>
                                     <small className="ms-2">{returnDate(comment.date)}</small>
                                 </div>
                                 <p className="small mb-0">{comment.contentComment}</p>

@@ -1,5 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {login} from "../../service/userService";
+import { createSlice } from "@reduxjs/toolkit";
+import { login } from "../../service/userService";
+import { socket } from "../../App";
 
 const initialState = {
     currentUser: JSON.parse(localStorage.getItem('user'))
@@ -10,12 +11,12 @@ const useSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                if(action.payload.accessToken) {
+                if (action.payload.accessToken) {
                     state.currentUser = action.payload;
-                    localStorage.setItem('user' , JSON.stringify(action.payload))
+                    localStorage.setItem('user', JSON.stringify(action.payload))
                 }
-            
-        })
+
+            })
     }
 })
 

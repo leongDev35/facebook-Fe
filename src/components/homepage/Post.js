@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
+import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { SITE, socket } from '../../App';
 import CommentPostInHome from './CommentPostInHome';
+
 
 
 
@@ -13,12 +14,10 @@ export default function Post() {
   const user = useSelector(({ users }) => {
     return users.currentUser.userData
   })
-  console.log(user);
 
   function returnDate(datePost) {
     const dateString = datePost;
     const timestamp = new Date(dateString).getTime();
-    console.log(timestamp); // Kết quả là một con số biểu thị ngày tháng
     const date = new Date(timestamp);
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // Lưu ý: Tháng bắt đầu từ 0
@@ -43,8 +42,7 @@ export default function Post() {
     const monthName = monthNames[month];
     return `${monthName} ${day} ${year} at ${hours}:${minutes}`
   }
-  
-  console.log(posts);
+
   const loadMorePosts = async () => {
     try {
       const response = await axios.get(`${SITE}/posts`, {
@@ -56,7 +54,6 @@ export default function Post() {
       const newPosts = response.data.posts;
       const newEndCursor = response.data.endCursor;
       setPosts([...posts, ...newPosts]);
-      console.log(newEndCursor);
       if (newEndCursor) {
         setEndCursor(newEndCursor);
       }
@@ -64,8 +61,27 @@ export default function Post() {
       console.error(error);
     }
   };
+  const loadPosts = async () => { //! load post lúc đầu
+    try {
+      const response = await axios.get(`${SITE}/posts`, {
+        params: {
+          // userId: '64e2edcbccb40a13972580bf', //! thay bằng id của user hiện tại
+          after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
+        },
+      });
+      const newPosts = response.data.posts;
+      const newEndCursor = response.data.endCursor;
+      setPosts(newPosts);
+
+      if (newEndCursor) {
+        setEndCursor(newEndCursor);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   socket.on('comment', (commentS) => {
-    console.log(commentS);
     // setComments(commentS)
   });
   socket.on('like', (postS) => {
@@ -75,7 +91,6 @@ export default function Post() {
       }
       return post; // Giữ nguyên bài post khác
     });
-    console.log(updatedPostsS);
     setPosts(updatedPostsS)
   });
   const handleLike = (p, event) => {
@@ -107,12 +122,29 @@ export default function Post() {
 
 
   useEffect(() => {
-    loadMorePosts();
+    loadPosts();
 
 
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
 
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        loadMorePosts();
+        console.log("scroll");
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [posts]); // Empty dependency array to run only once
 
 
   return (
@@ -175,7 +207,10 @@ export default function Post() {
                 {/* Info */}
                 <div>
                   <div className="nav nav-divider">
-                    <h6 className="nav-item card-title mb-0"> <a href="#!"> {post.ownerPost.fullName} </a></h6>
+                    <h6 className="nav-item card-title mb-0">
+                      <Link to={`/user/${post.ownerPost._id}`}>{post.ownerPost.fullName}</Link>
+                      {/* <a href="#!"> {post.ownerPost.fullName} </a> */}
+                    </h6>
                   </div>
                   <p className="mb-0 small">{returnDate(post.date)}</p>
                 </div>
@@ -546,16 +581,7 @@ export default function Post() {
         {/* Card feed item END */}
 
 
-        {/* Load more button START */}
-        <a onClick={loadMorePosts} role="button" className="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
-          <span className="load-text" > Load more </span>
-          <div className="load-icon">
-            <div className="spinner-grow spinner-grow-sm" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </a>
-        {/* Load more button END */}
+
       </div>
       {/* Main content END */}
     </>
