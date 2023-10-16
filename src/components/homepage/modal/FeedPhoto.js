@@ -1,6 +1,9 @@
 import React from 'react'
 
-export default function FeedPhoto() {
+export default function FeedPhoto({ posts, setPosts }) {
+
+
+
   return (
     <>
     <div className="modal fade" id="feedActionPhoto" tabIndex={-1} aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
@@ -8,7 +11,7 @@ export default function FeedPhoto() {
       <div className="modal-content">
         {/* Modal feed header START */}
         <div className="modal-header">
-          <h5 className="modal-title" id="feedActionPhotoLabel">Add post photo</h5>
+          <h5 className="modal-title" id="feedActionPhotoLabel">Add post</h5>
           <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
         </div>
         {/* Modal feed header END */}
@@ -27,11 +30,15 @@ export default function FeedPhoto() {
           </div>
           {/* Dropzone photo START */}
           <div>
-            <label className="form-label">Upload attachment</label>
+            <label className="form-label">Upload attachment
+            <input id='filepicker'
+                                        multiple  //: chọn nhiều file
+                                        type="file" style={{ display: 'none' }} /></label>
             <div className="dropzone dropzone-default card shadow-none" data-dropzone="{&quot;maxFiles&quot;:2}">
+            
               <div className="dz-message">
                 <i className="bi bi-images display-3" />
-                <p>Drag here or click to upload photo.</p>
+                <p>Click to upload photo.</p>
               </div>
             </div>
           </div>

@@ -51,7 +51,7 @@ export default function HomePage() {
   <ModalFeed/>
   {/* Modal create feed END */}
   {/* Modal create Feed photo START */}
-  <FeedPhoto/>
+  {/* <FeedPhoto/> */}
   {/* Modal create Feed photo END */}
   {/* Modal create Feed video START */}
   <FeetVideo/>

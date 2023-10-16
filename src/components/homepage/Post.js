@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { SITE, socket } from '../../App';
 import CommentPostInHome from './CommentPostInHome';
+import FeedPhoto from './modal/FeedPhoto';
 
 
 
@@ -157,7 +158,7 @@ export default function Post() {
           <div className="d-flex mb-3">
             {/* Avatar */}
             <div className="avatar avatar-xs me-2">
-              <a href="#"> <img className="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt /> </a>
+              <a href="#"> <img className="avatar-img rounded-circle" src={user.avatarUrl} alt /> </a>
             </div>
             {/* Post input */}
             <form className="w-100">
@@ -579,7 +580,9 @@ export default function Post() {
           {/* Modal post end */}
         </div>)}
         {/* Card feed item END */}
-
+        {/* Modal create Feed photo START */}
+        <FeedPhoto  posts={posts} setPosts={setPosts}/>
+        {/* Modal create Feed photo END */}
 
 
       </div>

@@ -164,16 +164,7 @@ const handleClick = () => {
                 </div>
               </div>
               {/* Nav Search END */}
-              <ul className="navbar-nav navbar-nav-scroll ms-auto">
-
-                {/* Nav item 4 Mega menu */}
-                <li className="nav-item">
-
-                  <Link className="nav-link" to="/network">
-                    My network
-                  </Link>
-                </li>
-              </ul>
+              
             </div>
             {/* Main navbar END */}
             {/* Nav right START */}

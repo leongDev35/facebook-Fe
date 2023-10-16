@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function SideBar({user}) {
   return (
@@ -67,16 +68,7 @@ export default function SideBar({user}) {
                         <a className="nav-link" href="my-profile.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/home-outline-filled.svg" alt /><span>Feed </span></a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="my-profile-connections.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/person-outline-filled.svg" alt /><span>Connections </span></a>
-                      </li>
-                      <li className="nav-item">
-                        <a className="nav-link" href="blog.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/earth-outline-filled.svg" alt /><span>Latest News </span></a>
-                      </li>
-                      <li className="nav-item">
-                        <a className="nav-link" href="events.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/calendar-outline-filled.svg" alt /><span>Events </span></a>
-                      </li>
-                      <li className="nav-item">
-                        <a className="nav-link" href="groups.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/chat-outline-filled.svg" alt /><span>Groups </span></a>
+                        <Link className="nav-link" to="/network"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/person-outline-filled.svg" alt /><span>Connections </span></Link>
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" href="notifications.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/notification-outlined-filled.svg" alt /><span>Notifications </span></a>
@@ -90,7 +82,7 @@ export default function SideBar({user}) {
                   {/* Card body END */}
                   {/* Card footer */}
                   <div className="card-footer text-center py-2">
-                    <a className="btn btn-link btn-sm" href="my-profile.html">View Profile </a>
+                    <Link className="btn btn-link btn-sm" to="/mypost">View Profile </Link>
                   </div>
                 </div>
                 {/* Card END */}
