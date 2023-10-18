@@ -178,11 +178,8 @@ export default function Message() {
     })
     console.log(setLastMessage);
     setLastMessagePartnerId(setLastMessage)
-
-
-
     setMessage(message)
-    setEndCursor(null)
+    setEndCursor(message.endCursor)
   })
 
 
@@ -212,8 +209,16 @@ export default function Message() {
 
 
     if (event.key === 'Enter') {
-      if (listFileImage) {
+      if (listFileImage.length != 0) { //! bug lỗi enter
+        event.preventDefault();
         getLinkByListFileItems(listFileImage, user, partner, type)
+        if (type.trim() !== '') {
+          // Gọi hàm callback onSendMessage để gửi tin nhắn
+
+          socket.emit('message', user, partner, type, socket.id, null)
+          // Xóa nội dung của form sau khi gửi
+          setFunction('');
+        }
       } else {
         event.preventDefault();
         if (type.trim() !== '') {
@@ -436,6 +441,7 @@ export default function Message() {
         if (element.scrollTop == 0) {
 
           console.log("scroll", element.scrollTop);
+          console.log(endCursor);
           socket.emit("scrollToLoadMessage", user._id, parnerId, endCursor
             , socket.id) //! vấn đề ở đây
         }
@@ -444,7 +450,7 @@ export default function Message() {
       element.addEventListener('scroll', handleScroll);
 
       socket.once('scrollToLoadMessage', (data) => {
-
+        console.log(data);
         const newMessages = data.messages;
         const newEndCursor = data.endCursor;
 
@@ -552,7 +558,7 @@ export default function Message() {
           if (files.length) {
             fileList.innerHTML = "";
             const list = document.createElement("ul");
-            list.id = `ul-listImage}`;
+            list.id = `ul-listImage`;
 
             fileList.appendChild(list);
             for (let i = 0; i < files.length; i++) {
@@ -600,7 +606,7 @@ export default function Message() {
           if (buttonClose) {
             buttonClose.onclick = () => {
               alert("Close")
-              let fileArray = listFileImage; //! vấn đề ở đây
+              let fileArray = listFileImage; 
 
               const newArr = fileArray.filter(item => {
 

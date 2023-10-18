@@ -150,7 +150,7 @@ export default function MyPost() {
                                         </div>
                                         {/* Button */}
                                         <div className="d-flex mt-3 justify-content-center ms-sm-auto">
-                                            <button className="btn btn-danger-soft me-2" type="button"> <i className="bi bi-pencil-fill pe-1" /> Edit profile </button>
+                                            <Link to={'/setting'} className="btn btn-danger-soft me-2" type="button"> <i className="bi bi-pencil-fill pe-1" /> Edit profile </Link>
                                             <div className="dropdown">
                                                 {/* Card share action menu */}
                                                 <button className="icon-md btn btn-light" type="button" id="profileAction2" data-bs-toggle="dropdown" aria-expanded="false">

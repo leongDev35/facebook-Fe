@@ -74,7 +74,7 @@ export default function SideBar({user}) {
                         <a className="nav-link" href="notifications.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/notification-outlined-filled.svg" alt /><span>Notifications </span></a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="settings.html"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/cog-outline-filled.svg" alt /><span>Settings </span></a>
+                        <Link className="nav-link" to="/setting"> <img className="me-2 h-20px fa-fw" src="assets/images/icon/cog-outline-filled.svg" alt /><span>Settings </span></Link>
                       </li>
                     </ul>
                     {/* Side Nav END */}

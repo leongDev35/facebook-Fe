@@ -12,11 +12,11 @@ export default function NavBar({ user }) {
   const [notifs, setNotifs] = useState();
   const [isSeen, setIsSeen] = useState(false);
 
-  
+
   async function handleResponseFriendRequest(friendId, response, notifId) {
-    
-    if(response == "accept") {
-      socket.emit('accept', notifId, friendId , user._id)
+
+    if (response == "accept") {
+      socket.emit('accept', notifId, friendId, user._id)
       const updatedNotifs = notifs.map(notif => {
         if (notif._id.toString() == notifId.toString()) {
           notif.typeNotif = "accept"
@@ -24,38 +24,38 @@ export default function NavBar({ user }) {
         }
         return notif; // Giữ nguyên bài post khác
       });
-      setNotifs(updatedNotifs) 
+      setNotifs(updatedNotifs)
 
     } else if (response == "reject") {
-          socket.emit('reject', notifId)  
-          const updatedNotifs = notifs.map(notif => {
-            if (notif._id.toString() == notifId.toString()) {
-              notif.typeNotif = "reject"
-              return notif; // Thay thế bài post cần thay thế
-            }
-            return notif; // Giữ nguyên bài post khác
-          });
-          setNotifs(updatedNotifs) 
+      socket.emit('reject', notifId)
+      const updatedNotifs = notifs.map(notif => {
+        if (notif._id.toString() == notifId.toString()) {
+          notif.typeNotif = "reject"
+          return notif; // Thay thế bài post cần thay thế
+        }
+        return notif; // Giữ nguyên bài post khác
+      });
+      setNotifs(updatedNotifs)
     }
     const serverData = await axios.post(`${SITE}/users/friend/accept`, {
-      
-        userId: user._id, 
-        senderId: friendId,
-        response: response
-        // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
-      
+
+      userId: user._id,
+      senderId: friendId,
+      response: response
+      // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
+
     });
   }
-const handleClick = () => {
+  const handleClick = () => {
     setIsSeen(true)
-}
+  }
 
-// const tatCaIsSeenLaFalse = notifs.every(obj => obj.isSeen === false);
-// if (tatCaIsSeenLaFalse) {
-//   setIsSeen(false)
-// } else {
-//   setIsSeen(true)
-// }
+  // const tatCaIsSeenLaFalse = notifs.every(obj => obj.isSeen === false);
+  // if (tatCaIsSeenLaFalse) {
+  //   setIsSeen(false)
+  // } else {
+  //   setIsSeen(true)
+  // }
   const loadNotifs = async () => { //! hàm load posts ban đầu, 
     try {
       const response = await axios.get(`${SITE}/users/notif`, {
@@ -82,13 +82,13 @@ const handleClick = () => {
   socket.once('likeNotif', (test) => {
     setIsSeen(false)
     if (notifs) {
-      setNotifs([test,...notifs]
+      setNotifs([test, ...notifs]
       )
     }
   })
-  
 
-  
+
+
   //! like 
   //! comment
   //! gửi lời mời kết bạn
@@ -164,7 +164,7 @@ const handleClick = () => {
                 </div>
               </div>
               {/* Nav Search END */}
-              
+
             </div>
             {/* Main navbar END */}
             {/* Nav right START */}
@@ -173,23 +173,19 @@ const handleClick = () => {
                 <Link className="nav-link icon-md btn btn-light p-0" to="/message">
                   <i className="bi bi-chat-left-text-fill fs-6"> </i>
                 </Link>
-
-
-
-
               </li>
               <li className="nav-item ms-2">
-                <a className="nav-link icon-md btn btn-light p-0" href="settings.html">
+                <Link className="nav-link icon-md btn btn-light p-0" to="/setting">
                   <i className="bi bi-gear-fill fs-6"> </i>
-                </a>
+                </Link>
               </li>
               <li onClick={() => {
                 handleClick()
               }} className="nav-item dropdown ms-2">
                 <a className="nav-link icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
 
-                  {isSeen ? null : 
-                  <span className="badge-notif animation-blink" />
+                  {isSeen ? null :
+                    <span className="badge-notif animation-blink" />
                   }
                   <i className="bi bi-bell-fill fs-6"> </i>
                 </a>
@@ -238,86 +234,86 @@ const handleClick = () => {
                                         <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
                                       </div>
                                       <div className="d-flex">
-                                        <button onClick={()=>{
-                    handleResponseFriendRequest(notif.actionUser._id, "accept", notif._id);
-                  }} className="btn btn-sm py-1 btn-primary me-2">Accept </button>
-                                        <button onClick={()=>{
-                    handleResponseFriendRequest(notif.actionUser._id, "reject", notif._id);
-                  }} className="btn btn-sm py-1 btn-danger-soft">Delete </button>
+                                        <button onClick={() => {
+                                          handleResponseFriendRequest(notif.actionUser._id, "accept", notif._id);
+                                        }} className="btn btn-sm py-1 btn-primary me-2">Accept </button>
+                                        <button onClick={() => {
+                                          handleResponseFriendRequest(notif.actionUser._id, "reject", notif._id);
+                                        }} className="btn btn-sm py-1 btn-danger-soft">Delete </button>
                                       </div>
                                     </div>
                                   </div>
-                                </li> 
+                                </li>
                                 : (notif.typeNotif === "accept") ?
-                                <li>
-                                  <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
-                                    <div className="avatar text-center d-none d-sm-inline-block">
-                                      <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
-                                    </div>
-                                    <div className="ms-sm-3">
-                                      <div className=" d-flex">
-                                        <p className="small mb-2"><b>{notif.actionUser.fullName}</b> sent you a friend request.</p>
-                                        <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
+                                  <li>
+                                    <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
+                                      <div className="avatar text-center d-none d-sm-inline-block">
+                                        <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
                                       </div>
-                                      <div className="d-flex">
-                                        Request is accepted
-                                      </div>
-                                    </div>
-                                  </div>
-                                </li>
-                                : (notif.typeNotif === "acceptYourRequest") ?
-                                <li>
-                                  <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
-                                    <div className="avatar text-center d-none d-sm-inline-block">
-                                      <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
-                                    </div>
-                                    <div className="ms-sm-3">
-                                      <div className=" d-flex">
-                                        <p className="small mb-2"><b>{notif.actionUser.fullName}</b> accepted your friend request.</p>
-                                        <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
-                                      </div>
-                                      
-                                    </div>
-                                  </div>
-                                </li>
-                                : (notif.typeNotif === "reject") ?
-                                <li>
-                                  <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
-                                    <div className="avatar text-center d-none d-sm-inline-block">
-                                      <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
-                                    </div>
-                                    <div className="ms-sm-3">
-                                      <div className=" d-flex">
-                                        <p className="small mb-2"><b>{notif.actionUser.fullName}</b> sent you a friend request.</p>
-                                        <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
-                                      </div>
-                                      <div className="d-flex">
-                                       Request removed
+                                      <div className="ms-sm-3">
+                                        <div className=" d-flex">
+                                          <p className="small mb-2"><b>{notif.actionUser.fullName}</b> sent you a friend request.</p>
+                                          <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
+                                        </div>
+                                        <div className="d-flex">
+                                          Request is accepted
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </li>
-
-                                : (notif.typeNotif === "comment") ?
-                                  <Link to={`/post/${notif.postId}`}>
-
+                                  </li>
+                                  : (notif.typeNotif === "acceptYourRequest") ?
                                     <li>
-                                      <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3 position-relative">
+                                      <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
                                         <div className="avatar text-center d-none d-sm-inline-block">
                                           <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
                                         </div>
-                                        <div className="ms-sm-3 d-flex">
-                                          <div>
-                                            <p className="small mb-2"><b>{notif.actionUser.fullName}</b> comment on your post </p>
+                                        <div className="ms-sm-3">
+                                          <div className=" d-flex">
+                                            <p className="small mb-2"><b>{notif.actionUser.fullName}</b> accepted your friend request.</p>
+                                            <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
                                           </div>
-                                          <p className="small ms-3">{tinhThoiGianChenhLech(notif.date)}</p>
+
                                         </div>
                                       </div>
                                     </li>
-                                  </Link>
+                                    : (notif.typeNotif === "reject") ?
+                                      <li>
+                                        <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
+                                          <div className="avatar text-center d-none d-sm-inline-block">
+                                            <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
+                                          </div>
+                                          <div className="ms-sm-3">
+                                            <div className=" d-flex">
+                                              <p className="small mb-2"><b>{notif.actionUser.fullName}</b> sent you a friend request.</p>
+                                              <p className="small ms-3 text-nowrap">{tinhThoiGianChenhLech(notif.date)}</p>
+                                            </div>
+                                            <div className="d-flex">
+                                              Request removed
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </li>
+
+                                      : (notif.typeNotif === "comment") ?
+                                        <Link to={`/post/${notif.postId}`}>
+
+                                          <li>
+                                            <div className="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3 position-relative">
+                                              <div className="avatar text-center d-none d-sm-inline-block">
+                                                <img className="avatar-img rounded-circle" src={notif.actionUser.avatarUrl} alt />
+                                              </div>
+                                              <div className="ms-sm-3 d-flex">
+                                                <div>
+                                                  <p className="small mb-2"><b>{notif.actionUser.fullName}</b> comment on your post </p>
+                                                </div>
+                                                <p className="small ms-3">{tinhThoiGianChenhLech(notif.date)}</p>
+                                              </div>
+                                            </div>
+                                          </li>
+                                        </Link>
 
 
-                                  : null
+                                        : null
 
 
                           )}
@@ -350,7 +346,7 @@ const handleClick = () => {
                         <p className="small m-0">Web Developer</p>
                       </div>
                     </div>
-                    <a className="dropdown-item btn btn-primary-soft btn-sm my-2 text-center" href="my-profile.html">View profile</a>
+                    <Link className="dropdown-item btn btn-primary-soft btn-sm my-2 text-center" to={'/mypost'}>View profile</Link>
                   </li>
                   {/* Links */}
                   <li><a className="dropdown-item" href="settings.html"><i className="bi bi-gear fa-fw me-2" />Settings &amp; Privacy</a></li>

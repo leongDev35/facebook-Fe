@@ -147,7 +147,7 @@ export default function Post() {
     };
   }, [posts]); // Empty dependency array to run only once
 
-
+ 
   return (
     <>
       {/* Main content START */}
@@ -170,15 +170,7 @@ export default function Post() {
             <li className="nav-item">
               <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto"> <i className="bi bi-image-fill text-success pe-2" />Photo</a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionVideo"> <i className="bi bi-camera-reels-fill text-info pe-2" />Video</a>
-            </li>
-            <li className="nav-item">
-              <a href="#" className="nav-link bg-light py-1 px-2 mb-0" data-bs-toggle="modal" data-bs-target="#modalCreateEvents"> <i className="bi bi-calendar2-event-fill text-danger pe-2" />Event </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i className="bi bi-emoji-smile-fill text-warning pe-2" />Feeling /Activity</a>
-            </li>
+
             <li className="nav-item dropdown ms-lg-auto">
               <a className="nav-link bg-light py-1 px-2 mb-0" href="#" id="feedActionShare" data-bs-toggle="dropdown" aria-expanded="false">
                 <i className="bi bi-three-dots" />
@@ -223,8 +215,12 @@ export default function Post() {
                 </a>
                 {/* Card feed action dropdown menu */}
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                  <li><a className="dropdown-item" href="#" > <i className="bi bi-bookmark fa-fw pe-2" />Save post</a></li>
-                  <li><a className="dropdown-item" href="#"> <i className="bi bi-person-x fa-fw pe-2" />Unfollow lori ferguson </a></li>
+                  <li><a className="dropdown-item" href="#" id='editButton'
+                     > <i className="bi bi-bookmark fa-fw pe-2" />Edit post</a>
+                    
+
+
+                  </li>
                   <li><a className="dropdown-item" href="#"> <i className="bi bi-x-circle fa-fw pe-2" />Hide post</a></li>
                   <li><a className="dropdown-item" href="#"> <i className="bi bi-slash-circle fa-fw pe-2" />Block</a></li>
                   <li><hr className="dropdown-divider" /></li>
@@ -239,9 +235,14 @@ export default function Post() {
           <div className="card-body">
             {/* Lông vào thẻ a để hiện modal  */}
             <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target={`#modalPost-${post._id}`}>
-              <p>{post.content}</p>
+
+              {!post.content ? null :
+                <p>{post.content}</p>
+              }
               {/* Card img */}
-              <img className="card-img" src="assets/images/post/3by2/01.jpg" alt="Post" />
+              {!post.contentImage ? null :
+                <img className="card-img" src={post.contentImage} alt="Post" />
+              }
             </a>
 
             {/* Feed react START */}
@@ -360,7 +361,10 @@ export default function Post() {
 
                   <p>{post.content}</p>
                   {/* Card img */}
-                  <img className="card-img" src="assets/images/post/3by2/01.jpg" alt="Post" />
+
+                  {!post.contentImage ? null :
+                    <img className="card-img" src="assets/images/post/3by2/01.jpg" alt="Post" />
+                  }
 
 
                   {/* Feed react START */}
@@ -581,7 +585,7 @@ export default function Post() {
         </div>)}
         {/* Card feed item END */}
         {/* Modal create Feed photo START */}
-        <FeedPhoto  posts={posts} setPosts={setPosts}/>
+        <FeedPhoto posts={posts} setPosts={setPosts} />
         {/* Modal create Feed photo END */}
 
 

@@ -56,9 +56,12 @@ export default function CommentPostInHome({ postId }) {
         event.preventDefault(); // Ngăn chặn form gửi thông tin mặc định
         const textarea = event.target.querySelector('textarea');
         const comment = textarea.value;
-        socket.emit('comment', p, u, comment)
-        setTextarea("")
-        textarea.value = '';
+        if (comment.trim() !== '') {
+            socket.emit('comment', p, u, comment)
+            setTextarea("")
+            textarea.value = '';
+        }
+        
     }
     const [textarea, setTextarea] = useState(
         ""
