@@ -11,7 +11,48 @@ export default function NavBar({ user }) {
   const [endCursor, setEndCursor] = useState(null);
   const [notifs, setNotifs] = useState();
   const [isSeen, setIsSeen] = useState(false);
+  const [usersSearch, setUsersSearch] = useState(null);
+  const [typeSearchUser, setTypeSearchUser] = useState('');
+  const [userSelected, setUserSelected] = useState(null);
 
+  function clickSearchToSelectUser(user) {
+    console.log(user);
+    setUserSelected(user);
+    setTypeSearchUser('')
+  }
+  function clickCloseSelectedUser(e) {
+    e.preventDefault();
+    setUserSelected(null);
+  }
+  async function getUsers() {
+
+    console.log(typeSearchUser);
+    if (typeSearchUser == '') {
+      console.log(1);
+      setUsersSearch(null)
+
+    } else if (typeSearchUser != '') {
+      const users = await axios.get(`${SITE}/users/searchByKeyword`, {
+        params: {
+          keyword: typeSearchUser, //! thay bằng id của user hiện tại
+          // after: endCursor, // Gửi giá trị con trỏ trong đường dẫn URL
+        },
+      });
+      console.log(typeSearchUser);
+      setUsersSearch(users.data)
+    }
+  }
+  useEffect(() => {
+    //! tim tren server list ban be co ten giong voi type( tim tuong doi)  nhu vay
+    if (typeSearchUser == '') {
+      setUsersSearch(null)
+
+    } else if (typeSearchUser != '') {
+
+      getUsers()
+
+    }
+  }, [typeSearchUser])
 
   async function handleResponseFriendRequest(friendId, response, notifId) {
 
@@ -136,7 +177,7 @@ export default function NavBar({ user }) {
       {/*Header START */}
       <header className="navbar-light fixed-top header-static bg-mode">
         {/* Logo Nav START */}
-        <nav className="navbar navbar-expand-lg">
+        <nav className="navbar navbar-expand-lg" style={{width: '100%', height: '100%'}}>
           <div className="container">
             {/* Logo START */}
             <Link className="navbar-brand" to={"/"}>
@@ -158,7 +199,54 @@ export default function NavBar({ user }) {
               <div className="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
                 <div className="nav-item w-100">
                   <form className="rounded position-relative">
-                    <input className="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search" />
+                    <input className="form-control ps-5 bg-light" type="search" onChange={(e) => {
+                      setTypeSearchUser(e.target.value)}} value={typeSearchUser} id='searchUser' placeholder="Search user..." aria-label="Search" />
+               
+
+                  {!usersSearch ? null :
+                    <div style={{
+                      position: 'absolute',
+                      top: 42,
+                      left: 0,
+                      backgroundColor: 'aliceblue',
+                      width: '299px',
+                      minHeight: '50px',
+                      overflow: 'hidden',
+                      maxHeight: 300
+                    }}>
+
+
+                      <ul className="nav flex-column nav-pills nav-pills-soft" style={{
+
+                        maxWidth: '100%',
+                        overflowY: 'scroll',
+                        maxHeight: '100%',
+                        display: 'block',
+                        scrollbarWidth: 10
+                      }}>
+
+                        {usersSearch.map((user) =>
+                          <li onClick={() => {
+                            clickSearchToSelectUser(user)
+                          }}  >
+                            {/* Chat user tab item */}
+                            <Link to={`/user/${user._id}`}>
+                            <div className="nav-link active text-start"  >
+                              <div className="d-flex">
+                                <div className="flex-shrink-0 avatar avatar-story me-2 status-online">
+                                  <img className="avatar-img rounded-circle" src={user.avatarUrl} alt />
+                                </div>
+                                <div className="flex-grow-1 d-block">
+                                  <h6 className="mb-0 mt-1">{user.fullName}</h6>
+                                </div>
+                              </div>
+                            </div>
+                            </Link>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  }
                     <button className="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit"><i className="bi bi-search fs-5"> </i></button>
                   </form>
                 </div>

@@ -658,7 +658,7 @@ Header END */}
                 {/* Advanced filter responsive toggler END */}
                 <div className="card card-body border-end-0 border-bottom-0 rounded-bottom-0">
                   <div className=" d-flex justify-content-between align-items-center">
-                    <h1 className="h5 mb-0">Active chats <span className="badge bg-success bg-opacity-10 text-success">6</span></h1>
+                    <h1 className="h5 mb-0">Active chats <span className="badge bg-success bg-opacity-10 text-success">{partners.length}</span></h1>
                     {/* Chat new create message item START */}
                     <div className="dropend position-relative">
                       <div className="nav">
@@ -677,17 +677,10 @@ Header END */}
                     {/* Offcanvas body */}
                     <div className="offcanvas-body p-0">
                       <div className="card card-chat-list rounded-end-lg-0 card-body border-end-lg-0 rounded-top-0">
-                        {/* Search chat START */}
-                        <form className="position-relative">
-                          <input className="form-control py-2" type="search" placeholder="Search for chats" aria-label="Search" />
-                          <button className="btn bg-transparent text-secondary px-2 py-0 position-absolute top-50 end-0 translate-middle-y" type="submit">
-                            <i className="bi bi-search fs-5" />
-                          </button>
-                        </form>
-                        {/* Search chat END */}
+                       
                         {/* Chat list tab START */}
                         <div className="mt-4 h-100" style={{ maxHeight: '100%' }}>
-                          <div className="chat-tab-list custom-scrollbar" style={{ maxHeight: '90%', overflowY: 'scroll' }}>
+                          <div className="chat-tab-list custom-scrollbar" style={{ maxHeight: '90%', overflowY: 'scroll', overflowX: 'hidden' }}>
                             <ul className="nav flex-column nav-pills nav-pills-soft">
                               {partners.map(partner => <li data-bs-dismiss="offcanvas" style={{ maxWidth: '100%', whiteSpace: 'pre' }}>
 

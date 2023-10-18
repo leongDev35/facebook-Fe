@@ -3,7 +3,6 @@ import NavBar from '../components/homepage/NavBar'
 import SideBar from '../components/homepage/SideBar'
 import Post from '../components/homepage/Post'
 import RightSideBar from '../components/homepage/RightSideBar'
-import Chat from '../components/homepage/Chat'
 import ModalFeed from '../components/homepage/modal/ModalFeed'
 import FeedPhoto from '../components/homepage/modal/FeedPhoto'
 import FeetVideo from '../components/homepage/modal/FeetVideo'
@@ -44,9 +43,7 @@ export default function HomePage() {
     {/* Container END */}
   </main>
   {/* **************** MAIN CONTENT END **************** */}
-  {/* Main Chat START */}
-  <Chat/>
-  {/* Main Chat END */}
+  
   {/* Modal create Feed START */}
   <ModalFeed/>
   {/* Modal create feed END */}
